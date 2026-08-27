@@ -1,12 +1,18 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 export default function Hero() {
+  const sectionRef = useRef<HTMLElement>(null);
   const imgWrapRef = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [hovering, setHovering] = useState(false);
+
+  // Parallaxe liée au scroll : le burger dérive légèrement pendant qu'on
+  // défile la page, en plus de l'inclinaison à la souris et du flottement.
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
+  const parallaxY = useTransform(scrollYProgress, [0, 1], [50, -50]);
 
   function handleMouseMove(e: React.MouseEvent) {
     const rect = imgWrapRef.current?.getBoundingClientRect();
@@ -18,6 +24,7 @@ export default function Hero() {
 
   return (
     <section
+      ref={sectionRef}
       id="top"
       className="relative min-h-[85vh] overflow-hidden bg-bg flex items-center py-16 sm:py-20"
       style={{ perspective: "1600px" }}
@@ -76,6 +83,7 @@ export default function Hero() {
         </div>
 
         {/* ---- Colonne image (licence stock achetée) avec vraie bascule 3D au survol ---- */}
+        <motion.div style={{ y: parallaxY }} className="relative">
         <div
           ref={imgWrapRef}
           onMouseMove={handleMouseMove}
@@ -119,6 +127,7 @@ export default function Hero() {
             </p>
           </div>
         </div>
+        </motion.div>
       </div>
     </section>
   );

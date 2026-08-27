@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Product, Supplement, fmt } from "@/lib/menu-data";
 import { useCart } from "@/lib/cart-context";
+import { track } from "@/lib/analytics";
+import { sanitizeText } from "@/lib/sanitize";
 
-export default function ProductModal({ product, onClose }: { product: Product | null; onClose: () => void }) {
+export default function ProductModal({ product, onClose, onAdded }: { product: Product | null; onClose: () => void; onAdded?: (id: string) => void }) {
   const { addToCart } = useCart();
   const [qty, setQty] = useState(1);
   const [accomp, setAccomp] = useState<string | null>(null);
@@ -18,6 +20,7 @@ export default function ProductModal({ product, onClose }: { product: Product | 
       setAccomp(product.accomp ? product.accomp[0] : null);
       setSupplements([]);
       setInstructions("");
+      track("view_product", { id: product.id, name: product.name });
     }
   }, [product]);
 
@@ -44,6 +47,8 @@ export default function ProductModal({ product, onClose }: { product: Product | 
       supplements,
       instructions: instructions.trim(),
     });
+    track("add_to_cart", { id: product.id, name: product.name, qty, unitPrice });
+    onAdded?.(product.id);
     onClose();
   }
 
@@ -132,8 +137,9 @@ export default function ProductModal({ product, onClose }: { product: Product | 
                   <p className="text-xs font-bold uppercase tracking-wide text-flame mb-2">Instructions (facultatif)</p>
                   <textarea
                     value={instructions}
-                    onChange={(e) => setInstructions(e.target.value)}
+                    onChange={(e) => setInstructions(sanitizeText(e.target.value, 200))}
                     rows={2}
+                    maxLength={200}
                     placeholder="Sans oignons, sauce à part..."
                     className="w-full bg-panel2 border border-line rounded-xl px-3.5 py-2.5 text-sm text-bone placeholder:text-mut/60 focus:outline-none focus:border-red"
                   />

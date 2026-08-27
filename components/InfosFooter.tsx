@@ -13,7 +13,15 @@ export default function InfosFooter() {
             <div key={name} className="bg-panel border border-line rounded-2xl px-6 py-6 text-left">
               <h3 className="font-serif italic font-bold text-lg text-bone mb-3">{name}</h3>
               <p className="text-sm text-mut mb-2">📍 {info.address}</p>
-              <p className="text-sm text-mut">📞 {info.phoneDisplay}</p>
+              <p className="text-sm text-mut mb-4">📞 {info.phoneDisplay}</p>
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("Akif Fast Food " + name + " " + info.address + " Lomé Togo")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-red hover:underline"
+              >
+                🧭 Voir l&apos;itinéraire
+              </a>
             </div>
           ))}
         </div>

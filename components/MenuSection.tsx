@@ -9,6 +9,7 @@ import {
   fmt,
 } from "@/lib/menu-data";
 import { useFavorites } from "@/lib/favorites";
+import ScrollReveal from "./ScrollReveal";
 
 const CATS: Category[] = ["populaires", "poulet", "burgers", "chawarma", "tacos", "pizza", "viande", "fruitsdemer", "glaces", "boulangerie", "boissons"];
 const ALL_PRODUCTS: Product[] = Object.values(MENU).flat();
@@ -205,8 +206,10 @@ export default function MenuSection({ onOpenProduct }: { onOpenProduct: (p: Prod
             <p className="text-center text-mut py-20">Aucun plat ne correspond à ces filtres.</p>
           ) : (
             <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
-              {filtered.map((p) => (
-                <ProductCard key={p.id} product={p} onOpen={onOpenProduct} />
+              {filtered.map((p, i) => (
+                <ScrollReveal key={p.id} delay={Math.min(i, 8) * 0.05}>
+                  <ProductCard product={p} onOpen={onOpenProduct} />
+                </ScrollReveal>
               ))}
             </div>
           )}

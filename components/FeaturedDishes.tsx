@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { MENU, Product, fmt } from "@/lib/menu-data";
 import { useFavorites } from "@/lib/favorites";
+import ScrollReveal from "./ScrollReveal";
 
 const FEATURED: Product[] = Object.values(MENU)
   .flat()
@@ -68,8 +69,10 @@ export default function FeaturedDishes({ onOpenProduct }: { onOpenProduct: (p: P
         </a>
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-        {FEATURED.map((p) => (
-          <FeaturedCard key={p.id} product={p} onOpen={onOpenProduct} />
+        {FEATURED.map((p, i) => (
+          <ScrollReveal key={p.id} delay={i * 0.08}>
+            <FeaturedCard product={p} onOpen={onOpenProduct} />
+          </ScrollReveal>
         ))}
       </div>
     </section>

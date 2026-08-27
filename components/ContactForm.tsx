@@ -11,9 +11,9 @@ export default function ContactForm() {
           arrivent dans l'onglet "Forms" du tableau de bord Netlify. */}
       <form name="contact-akif" method="POST" data-netlify="true" className="space-y-4">
         <input type="hidden" name="form-name" value="contact-akif" />
-        <input type="text" name="nom" placeholder="Votre nom" required className="w-full bg-panel border border-line rounded-xl px-4 py-3 text-sm text-bone placeholder:text-mut/60 focus:outline-none focus:border-red" />
-        <input type="tel" name="telephone" placeholder="Votre numéro" required className="w-full bg-panel border border-line rounded-xl px-4 py-3 text-sm text-bone placeholder:text-mut/60 focus:outline-none focus:border-red" />
-        <textarea name="message" rows={3} placeholder="Votre message" required className="w-full bg-panel border border-line rounded-xl px-4 py-3 text-sm text-bone placeholder:text-mut/60 focus:outline-none focus:border-red" />
+        <input type="text" name="nom" placeholder="Votre nom" required maxLength={80} className="w-full bg-panel border border-line rounded-xl px-4 py-3 text-sm text-bone placeholder:text-mut/60 focus:outline-none focus:border-red" />
+        <input type="tel" name="telephone" placeholder="Votre numéro" required maxLength={20} className="w-full bg-panel border border-line rounded-xl px-4 py-3 text-sm text-bone placeholder:text-mut/60 focus:outline-none focus:border-red" />
+        <textarea name="message" rows={3} placeholder="Votre message" required maxLength={500} className="w-full bg-panel border border-line rounded-xl px-4 py-3 text-sm text-bone placeholder:text-mut/60 focus:outline-none focus:border-red" />
         <button type="submit" className="w-full bg-red hover:bg-red-deep text-white font-bold py-3.5 rounded-full transition-colors">
           Envoyer
         </button>
