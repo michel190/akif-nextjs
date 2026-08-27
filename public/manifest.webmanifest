@@ -1,0 +1,13 @@
+{
+  "name": "Akif Fast Food",
+  "short_name": "Akif",
+  "description": "Chawarmas, burgers, pizzas et plus — 3 agences à Lomé.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF8F5",
+  "theme_color": "#E31E27",
+  "lang": "fr",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

@@ -1,7 +1,10 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect, useRef } from "react";
 import { Product, Supplement } from "./menu-data";
+import { validatePromoCode } from "./promo";
+
+const CART_STORAGE_KEY = "akif-panier";
 
 export type CartItem = {
   key: string;
@@ -33,18 +36,56 @@ type CartContextType = {
   locationLink: string | null;
   locationStatus: "idle" | "loading" | "granted" | "denied" | "error";
   requestLocation: () => void;
+  nom: string;
+  setNom: (n: string) => void;
+  telephone: string;
+  setTelephone: (t: string) => void;
+  commentaire: string;
+  setCommentaire: (c: string) => void;
+  promoInput: string;
+  setPromoInput: (p: string) => void;
+  promoResult: { valid: boolean; discount: number; message: string } | null;
+  applyPromo: () => void;
+  removePromo: () => void;
 };
 
 const CartContext = createContext<CartContextType | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const hasLoadedFromStorage = useRef(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [fulfillMode, setFulfillMode] = useState<"emporter" | "livraison" | null>(null);
   const [quartier, setQuartier] = useState("");
   const [selectedAgency, setSelectedAgency] = useState<string | null>(null);
   const [locationLink, setLocationLink] = useState<string | null>(null);
   const [locationStatus, setLocationStatus] = useState<"idle" | "loading" | "granted" | "denied" | "error">("idle");
+  const [nom, setNom] = useState("");
+  const [telephone, setTelephone] = useState("");
+  const [commentaire, setCommentaire] = useState("");
+  const [promoInput, setPromoInput] = useState("");
+  const [promoResult, setPromoResult] = useState<{ valid: boolean; discount: number; message: string } | null>(null);
+
+  // Recharge le panier sauvegardé au premier chargement (persistance après actualisation)
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(CART_STORAGE_KEY);
+      if (raw) setCart(JSON.parse(raw));
+    } catch {
+      // Stockage indisponible : le panier démarre simplement vide.
+    }
+    hasLoadedFromStorage.current = true;
+  }, []);
+
+  // Sauvegarde le panier à chaque changement (une fois le chargement initial fait)
+  useEffect(() => {
+    if (!hasLoadedFromStorage.current) return;
+    try {
+      window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+    } catch {
+      // Stockage indisponible : le panier reste fonctionnel pour cette session.
+    }
+  }, [cart]);
 
   function requestLocation() {
     if (!("geolocation" in navigator)) {
@@ -87,6 +128,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const total = cart.reduce((s, c) => s + c.unitPrice * c.qty, 0);
   const count = cart.reduce((s, c) => s + c.qty, 0);
 
+  function applyPromo() {
+    setPromoResult(validatePromoCode(promoInput, total));
+  }
+  function removePromo() {
+    setPromoInput("");
+    setPromoResult(null);
+  }
+
   return (
     <CartContext.Provider
       value={{
@@ -107,6 +156,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
         locationLink,
         locationStatus,
         requestLocation,
+        nom,
+        setNom,
+        telephone,
+        setTelephone,
+        commentaire,
+        setCommentaire,
+        promoInput,
+        setPromoInput,
+        promoResult,
+        applyPromo,
+        removePromo,
       }}
     >
       {children}

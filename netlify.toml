@@ -1,0 +1,21 @@
+[build]
+  command = "npm run build"
+  publish = "out"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    Permissions-Policy = "camera=(), microphone=(), payment=(), usb=(), geolocation=(self)"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://images.unsplash.com; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self';"
+
+# HTTPS forcé (Netlify le fait déjà automatiquement sur *.netlify.app,
+# cette règle est une sécurité supplémentaire explicite).
+[[redirects]]
+  from = "http://akif-fastfood-tg.netlify.app/*"
+  to = "https://akif-fastfood-tg.netlify.app/:splat"
+  status = 301
+  force = true

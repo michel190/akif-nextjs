@@ -7,12 +7,20 @@ export function buildWhatsappUrl({
   quartier,
   selectedAgency,
   locationLink,
+  nom,
+  telephone,
+  commentaire,
+  promoDiscount,
 }: {
   cart: CartItem[];
   fulfillMode: "emporter" | "livraison" | null;
   quartier: string;
   selectedAgency: string | null;
   locationLink?: string | null;
+  nom?: string;
+  telephone?: string;
+  commentaire?: string;
+  promoDiscount?: number;
 }) {
   const lines = cart
     .map((c) => {
@@ -32,15 +40,25 @@ export function buildWhatsappUrl({
     if (locationLink) modeLine += `\nPosition exacte : ${locationLink}`;
   }
   const agencyLine = selectedAgency ? `\nAgence : ${selectedAgency}` : "";
+  const clientLines = [
+    nom?.trim() ? `\nNom : ${nom.trim()}` : "",
+    telephone?.trim() ? `\nTéléphone : ${telephone.trim()}` : "",
+  ].join("");
+  const commentLine = commentaire?.trim() ? `\nCommentaire : ${commentaire.trim()}` : "";
 
-  const total = cart.reduce((s, c) => s + c.unitPrice * c.qty, 0);
+  const subtotal = cart.reduce((s, c) => s + c.unitPrice * c.qty, 0);
+  const discount = promoDiscount || 0;
+  const total = Math.max(0, subtotal - discount);
   const hasUnpricedItem = cart.some((c) => c.unitPrice === 0);
-  const totalLine = hasUnpricedItem
-    ? `\n\nTotal (hors articles à prix à confirmer) : ${fmt(total)}`
-    : `\n\nTotal : ${fmt(total)}`;
+
+  let totalBlock = `\n\nSous-total : ${fmt(subtotal)}`;
+  if (discount > 0) totalBlock += `\nRéduction : -${fmt(discount)}`;
+  totalBlock += hasUnpricedItem
+    ? `\nTotal (hors articles à prix à confirmer) : ${fmt(total)}`
+    : `\nTotal : ${fmt(total)}`;
 
   const msg = cart.length
-    ? `Bonjour, je voudrais commander :\n\n${lines}${agencyLine}${modeLine}${totalLine}`
+    ? `AKIF FAST FOOD — Nouvelle commande\n\n${lines}${agencyLine}${modeLine}${clientLines}${commentLine}${totalBlock}`
     : "Bonjour, je voudrais passer une commande.";
 
   const targetNumber = (selectedAgency && AGENCY_NUMBERS[selectedAgency]) || RESTO_NUMBER;

@@ -13,10 +13,13 @@ import Reviews from "@/components/Reviews";
 import FAQ from "@/components/FAQ";
 import ContactForm from "@/components/ContactForm";
 import InfosFooter from "@/components/InfosFooter";
+import FloatingWhatsapp from "@/components/FloatingWhatsapp";
+import UpsellToast from "@/components/UpsellToast";
 import { Product } from "@/lib/menu-data";
 
 export default function HomePage() {
   const [activeProduct, setActiveProduct] = useState<Product | null>(null);
+  const [lastAddedId, setLastAddedId] = useState<string | null>(null);
 
   return (
     <>
@@ -30,9 +33,11 @@ export default function HomePage() {
       <ContactForm />
       <InfosFooter />
 
-      <ProductModal product={activeProduct} onClose={() => setActiveProduct(null)} />
+      <ProductModal product={activeProduct} onClose={() => setActiveProduct(null)} onAdded={setLastAddedId} />
       <CartDrawer />
       <MobileCartBar />
+      <FloatingWhatsapp />
+      <UpsellToast lastAddedId={lastAddedId} onClose={() => setLastAddedId(null)} />
     </>
   );
 }

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://akif-fastfood-tg.netlify.app/sitemap.xml
