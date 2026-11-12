@@ -3,6 +3,7 @@ import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/lib/cart-context";
 import { AGENCY_INFO } from "@/lib/menu-data";
+import { CINEMA_DETECTION_SCRIPT } from "@/lib/burger3d/capability";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -60,8 +61,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   };
 
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning>
       <head>
+        {/* Décide AVANT l'affichage si l'appareil lance la 3D (voir lib/burger3d/capability.ts) */}
+        <script dangerouslySetInnerHTML={{ __html: CINEMA_DETECTION_SCRIPT }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

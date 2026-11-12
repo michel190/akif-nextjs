@@ -25,7 +25,6 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      id="top"
       className="relative min-h-[85vh] overflow-hidden bg-bg flex items-center py-16 sm:py-20"
       style={{ perspective: "1600px" }}
     >

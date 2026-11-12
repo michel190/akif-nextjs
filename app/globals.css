@@ -6,6 +6,126 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Les liens d'ancre (#menu, #contact…) ne doivent pas se cacher sous l'en-tête sticky (h-20) */
+section[id] {
+  scroll-margin-top: 5rem;
+}
+
 body {
   background: #0c0b0e;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   EXPÉRIENCE 3D (hero cinématique + vue 360°)
+   Portée du projet "theburger". Tout est préfixé .cinema- pour ne pas
+   interférer avec le reste du site.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* Lenis (défilement fluide) — actif seulement pendant la section 3D */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Hauteur d'une "scène" : écran moins l'en-tête sticky (h-20 = 5rem) */
+.cinema-root {
+  --stage-h: calc(100vh - 5rem);
+}
+@supports (height: 100svh) {
+  .cinema-root {
+    --stage-h: calc(100svh - 5rem);
+  }
+}
+.cinema-stage {
+  position: sticky;
+  top: 5rem;
+  height: var(--stage-h);
+}
+
+/* Verdict de détection (script inline dans <head>) : évite le clignotement */
+.cinema-placeholder {
+  display: none;
+}
+html[data-cinema="1"] .hero-classic {
+  display: none;
+}
+html[data-cinema="1"] .cinema-placeholder {
+  display: flex;
+}
+
+.cinema-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+@media (min-width: 1024px) {
+  .cinema-container {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+.cinema-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.cinema-btn,
+.cinema-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.9rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.35s, background 0.35s, border-color 0.35s;
+}
+.cinema-btn {
+  color: #fff;
+  border: none;
+  background: linear-gradient(135deg, #e31e27 0%, #f0463a 100%);
+  box-shadow: 0 8px 28px rgba(227, 30, 39, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+.cinema-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 16px 44px rgba(227, 30, 39, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.cinema-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+.cinema-btn-ghost {
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+}
+.cinema-btn-ghost:hover {
+  transform: translateY(-2px);
+  border-color: rgba(245, 166, 35, 0.6);
+  background: rgba(245, 166, 35, 0.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cinema-btn,
+  .cinema-btn-ghost {
+    transition: none;
+  }
 }

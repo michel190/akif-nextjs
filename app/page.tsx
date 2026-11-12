@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Header from "@/components/Header";
-import Hero from "@/components/Hero";
+import Hero3D from "@/components/cinema/Hero3D";
+import Viewer360 from "@/components/cinema/Viewer360";
 import FeaturedDishes from "@/components/FeaturedDishes";
 import MenuSection from "@/components/MenuSection";
 import ProductModal from "@/components/ProductModal";
@@ -24,9 +25,10 @@ export default function HomePage() {
   return (
     <>
       <Header />
-      <Hero />
+      <Hero3D />
       <FeaturedDishes onOpenProduct={setActiveProduct} />
       <MenuSection onOpenProduct={setActiveProduct} />
+      <Viewer360 />
       <Engagements />
       <Reviews />
       <FAQ />
